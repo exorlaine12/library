@@ -1,4 +1,4 @@
-﻿namespace library.Models;
+﻿namespace library2.Models;
 
 // One Book object holds one row of lending.book.
 public class Book
