@@ -42,4 +42,17 @@ public class MemberRepository
 
         return members;
     }
+    // CREATE: insert a new member. The database chooses member_id and join_date.
+    public async Task AddAsync(Member member)
+    {
+        const string sql = "INSERT INTO lending.member (full_name, email, member_type) " +
+                           "VALUES (@full_name, @email, @member_type);";
+
+        await using var command = _dataSource.CreateCommand(sql);
+        command.Parameters.AddWithValue("full_name", member.FullName);
+        command.Parameters.AddWithValue("email", (object?)member.Email ?? DBNull.Value);
+        command.Parameters.AddWithValue("member_type", member.MemberType);
+
+        await command.ExecuteNonQueryAsync();
+    }
 }

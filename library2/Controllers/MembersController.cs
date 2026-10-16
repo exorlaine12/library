@@ -19,4 +19,23 @@ public class MembersController : Controller
         var members = await _members.GetAllAsync();
         return View(members);
     }
+    // GET /Members/Create : an empty form.
+    public IActionResult Create()
+    {
+        return View(new Member());
+    }
+
+    // POST /Members/Create : the form was submitted.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Member member)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(member);
+        }
+
+        await _members.AddAsync(member);
+        return RedirectToAction(nameof(Index));
+    }
 }
