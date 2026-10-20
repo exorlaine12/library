@@ -1,3 +1,6 @@
+-- schema.sql : the Library Lending System database
+-- Run this first, once. It removes any existing lending schema and rebuilds it empty.
+ 
 DROP SCHEMA IF EXISTS lending CASCADE;
 CREATE SCHEMA lending;
  
@@ -33,3 +36,6 @@ CREATE TABLE lending.loan (
   CONSTRAINT fk_loan_book   FOREIGN KEY (book_id)   REFERENCES lending.book (book_id)     ON DELETE CASCADE,
   CONSTRAINT chk_days_allowed      CHECK (days_allowed BETWEEN 1 AND 30),
   CONSTRAINT chk_return_after_loan CHECK (returned_on IS NULL OR returned_on >= loaned_on)
+);
+
+

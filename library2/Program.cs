@@ -1,5 +1,4 @@
 using library2.Data;
-using library2.Data;
 using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,12 +12,12 @@ if (string.IsNullOrWhiteSpace(connectionString))
 {
     throw new InvalidOperationException("Connection string 'Library' is missing. Add it in Manage User Secrets.");
 }
-var dataSource = NpgsqlDataSource.Create(connectionString);
-builder.Services.AddSingleton(dataSource);
+NpgsqlDataSource dataSource = NpgsqlDataSource.Create(connectionString);
 
 // Repositories: one new object per web request.
 builder.Services.AddScoped<BookRepository>();
 builder.Services.AddScoped<MemberRepository>();
+builder.Services.AddSingleton(dataSource);
 
 
 var app = builder.Build();

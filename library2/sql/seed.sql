@@ -1,4 +1,7 @@
 
+-- seed.sql : sample data for the Library Lending System
+-- Run this after schema.sql. Members, books and loans are numbered 1, 2, 3 ... in the order below.
+ 
 INSERT INTO lending.member (full_name, email, join_date, member_type) VALUES
   ('Reyes, Ana', 'ana.reyes@ub.edu.ph', '2026-01-08', 'Student'),
   ('Santos, Miguel', 'm.santos@ub.edu.ph', '2026-01-08', 'Student'),
@@ -13,7 +16,7 @@ INSERT INTO lending.member (full_name, email, join_date, member_type) VALUES
   ('Garcia, Luis', 'l.garcia@ub.edu.ph', '2026-03-09', 'Student'),
   ('Ocampo, Diana', 'd.ocampo@ub.edu.ph', '2026-03-14', 'Regular'),
   ('Lozano, Mia', 'm.lozano@ub.edu.ph', '2026-04-02', 'Student'),
-  ('Quinto, Rafael', 'r.quinto@ub.edu.ph', '2026-04-10', 'Regular');
+ ('Quinto, Rafael', 'r.quinto@ub.edu.ph', '2026-04-10', 'Regular');
  
 INSERT INTO lending.book (title, category, price) VALUES
   ('Dune', 'Fiction', 550.00),
