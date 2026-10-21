@@ -3,36 +3,43 @@ using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add MVC controllers and Razor views.
 builder.Services.AddControllersWithViews();
 
-// Database: read the connection string from User Secrets and create one shared data source.
-var connectionString = builder.Configuration.GetConnectionString("Library");
+// Read the database connection from User Secrets.
+var connectionString =
+    builder.Configuration.GetConnectionString("Library");
+
 if (string.IsNullOrWhiteSpace(connectionString))
 {
-    throw new InvalidOperationException("Connection string 'Library' is missing. Add it in Manage User Secrets.");
+    throw new InvalidOperationException(
+        "Connection string 'Library' is missing. " +
+        "Add it in Manage User Secrets.");
 }
-NpgsqlDataSource dataSource = NpgsqlDataSource.Create(connectionString);
 
-// Repositories: one new object per web request.
+// Create the shared PostgreSQL data source.
+NpgsqlDataSource dataSource =
+    NpgsqlDataSource.Create(connectionString);
+
+// Register repositories.
 builder.Services.AddScoped<BookRepository>();
 builder.Services.AddScoped<MemberRepository>();
-builder.Services.AddSingleton(dataSource);
+builder.Services.AddScoped<NoteRepository>();
 
+// Register the shared data source.
+builder.Services.AddSingleton(dataSource);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseRouting();
-
 app.UseAuthorization();
 
 app.MapStaticAssets();
