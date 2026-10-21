@@ -1,8 +1,114 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="mb-5">
+    <div class="library-card p-4 p-md-5">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <span class="badge rounded-pill mb-3"
+                      style="background: #E4EEE5; color: #214D3B;">
+                    YOUR LIBRARY, ORGANIZED
+                </span>
+
+                <h1 class="mb-3">
+                    Welcome to LibraryHub.
+                </h1>
+
+                <p class="text-muted fs-5 mb-4">
+                    Keep your book collection organized, manage
+                    library members, and make library administration
+                    simpler in one convenient place.
+                </p>
+
+                <a asp-controller="Books"
+                   asp-action="Index"
+                   class="btn btn-primary btn-lg me-2 mb-2">
+                    Browse Books
+                </a>
+
+                <a asp-controller="Members"
+                   asp-action="Index"
+                   class="btn btn-outline-secondary btn-lg mb-2">
+                    View Members
+                </a>
+            </div>
+
+            <div class="col-lg-4 text-center">
+                <div style="
+                    background: #E4EEE5;
+                    border-radius: 24px;
+                    padding: 35px 15px;">
+
+                    <div style="font-size: 75px; line-height: 1.3;">
+                        📚
+                    </div>
+
+                    <h4 class="mt-3 mb-2">
+                        Your Reading Space
+                    </h4>
+
+                    <p class="text-muted mb-0">
+                        Every book has its place.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mb-4">
+    <div class="mb-4">
+        <h2 class="h3 mb-2">Library Management</h2>
+        <p class="text-muted mb-0">
+            Choose a section to get started.
+        </p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="library-card h-100 p-4">
+                <div class="mb-3"
+                     style="font-size: 38px;">
+                    📖
+                </div>
+
+                <h3 class="h4">Book Collection</h3>
+
+                <p class="text-muted">
+                    Browse your catalogue and manage book
+                    information, categories, and prices.
+                </p>
+
+                <a asp-controller="Books"
+                   asp-action="Index"
+                   class="btn btn-primary mt-2">
+                    Manage Books →
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="library-card h-100 p-4">
+                <div class="mb-3"
+                     style="font-size: 38px;">
+                    👥
+                </div>
+
+                <h3 class="h4">Library Members</h3>
+
+                <p class="text-muted">
+                    Access the members section to organize
+                    and manage your library's member records.
+                </p>
+
+                <a asp-controller="Members"
+                   asp-action="Index"
+                   class="btn btn-primary mt-2">
+                    Manage Members →
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
