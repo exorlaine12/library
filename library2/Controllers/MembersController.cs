@@ -2,135 +2,157 @@
 using library2.Data;
 using library2.Models;
 using Microsoft.AspNetCore.Mvc;
-
 namespace library2.Controllers;
 
 public class MembersController : Controller
 {
     private readonly MemberRepository _members;
+    private readonly LoanRepository _loans;
 
-    public MembersController(MemberRepository members)
+    public MembersController(MemberRepository members, LoanRepository loans)
     {
         _members = members;
+        _loans = loans;
     }
 
-    // GET /Members : the list of members.
+    // GET /Members
     public async Task<IActionResult> Index()
     {
         var members = await _members.GetAllAsync();
         return View(members);
     }
 
-    // GET /Members/Create : an empty form.
+    // GET /Members/Create
     public IActionResult Create()
     {
         return View(new Member());
     }
 
-    // POST /Members/Create : the form was submitted.
+    // POST /Members/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Member member)
     {
         if (!ModelState.IsValid)
         {
-            // 2. Show the form again, with what was typed.
             return View(member);
         }
 
         try
         {
-            // 3. Save the new member.
             await _members.AddAsync(member);
         }
-        catch (PostgresException ex) when (ex.SqlState == PostgresErrorCodes.UniqueViolation)
+        catch (PostgresException ex) when (
+            ex.SqlState == PostgresErrorCodes.UniqueViolation)
         {
-            // 5. Put a message under the Email box.
-            ModelState.AddModelError("Email", "Another member already uses this email.");
-            // 6. Show the form again, with what was typed.
+            ModelState.AddModelError(
+                "Email",
+                "Another member already uses this email.");
+
             return View(member);
         }
 
-        // 7. The member was saved: go back to the list.
         return RedirectToAction(nameof(Index));
     }
 
-    // GET /Members/Edit/5 : the form, filled with member 5.
+    // GET /Members/Edit/5
     public async Task<IActionResult> Edit(long id)
     {
         var member = await _members.GetByIdAsync(id);
+
         if (member == null)
         {
             return NotFound();
         }
+
         return View(member);
     }
 
-    // POST /Members/Edit/5 : the changed form was submitted.
+    // POST /Members/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(Member member)
     {
         if (!ModelState.IsValid)
         {
-            // 2. Show the form again, with what was typed.
             return View(member);
         }
 
         try
         {
-            // 3. Save the changes.
             await _members.UpdateAsync(member);
         }
-        catch (PostgresException ex) when (ex.SqlState == PostgresErrorCodes.UniqueViolation)
+        catch (PostgresException ex) when (
+            ex.SqlState == PostgresErrorCodes.UniqueViolation)
         {
-            // 5. Put a message under the Email box.
-            ModelState.AddModelError("Email", "Another member already uses this email.");
-            // 6. Show the form again, with what was typed.
+            ModelState.AddModelError(
+                "Email",
+                "Another member already uses this email.");
+
             return View(member);
         }
 
-        // 7. The changes were saved: go back to the list.
         return RedirectToAction(nameof(Index));
     }
 
-    // GET /Members/Delete/5 : ask "are you sure?"
+    // GET /Members/Delete/5
     public async Task<IActionResult> Delete(long id)
     {
         var member = await _members.GetByIdAsync(id);
+
         if (member == null)
         {
             return NotFound();
         }
+
         return View(member);
     }
 
-    // POST /Members/Delete/5 : the delete was confirmed.
+    // POST /Members/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(long id)
     {
         try
         {
-            // 1. Delete the member.
             await _members.DeleteAsync(id);
         }
-        catch (PostgresException ex) when (ex.SqlState == PostgresErrorCodes.ForeignKeyViolation)
+        catch (PostgresException ex) when (
+            ex.SqlState == PostgresErrorCodes.ForeignKeyViolation)
         {
-            // 3. Load the member again, to show them on the page.
             var member = await _members.GetByIdAsync(id);
+
             if (member == null)
             {
-                // 5. Answer "not found".
                 return NotFound();
             }
-            // 6. Set the message the page will show.
-            ViewBag.Error = "This member has loans on record, so the database will not delete them.";
-            // 7. Show the Delete page again, with the member.
+
+            ViewBag.Error =
+                "This member has loans on record, so the database will not delete them.";
+
             return View("Delete", member);
         }
 
-        // 8. The member was deleted: go back to the list.
         return RedirectToAction(nameof(Index));
     }
+
+    // GET /Members/Details/5
+    public async Task<IActionResult> Details(long id)
+    {
+        var member = await _members.GetByIdAsync(id);
+
+        if (member == null)
+        {
+            return NotFound();
+        }
+
+        var details = new MemberDetails
+        {
+            Member = member,
+            Loans = await _loans.GetByMemberAsync(id)
+        };
+
+        return View(details);
+    }
 }
+
