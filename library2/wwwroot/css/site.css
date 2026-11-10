@@ -433,3 +433,260 @@ textarea.form-control {
             text-align: left !important;
         }
 }
+/* ===== Activity 11 design ===== */
+
+/* summary cards */
+.stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: .75rem;
+    margin-bottom: 1.25rem;
+}
+
+.stat-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-left-width: 5px;
+    border-radius: .75rem;
+    padding: .9rem 1.1rem;
+}
+
+    .stat-card .stat-num {
+        font-size: 1.75rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .stat-card .stat-label {
+        font-size: .72rem;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: #6b7280;
+    }
+
+.stat-out {
+    border-left-color: #f59e0b;
+}
+
+.stat-overdue {
+    border-left-color: #dc2626;
+}
+
+.stat-returned {
+    border-left-color: #16a34a;
+}
+
+.stat-total {
+    border-left-color: #2563eb;
+}
+
+/* white card around a table */
+.card-table {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: .75rem;
+    overflow: hidden;
+}
+
+    .card-table .table {
+        margin-bottom: 0;
+    }
+
+    .card-table thead th {
+        background: #f9fafb;
+        color: #6b7280;
+        font-size: .72rem;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .card-table td {
+        vertical-align: middle;
+    }
+
+/* status and type pills */
+.pill {
+    display: inline-block;
+    padding: .2rem .65rem;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+.pill-out {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.pill-overdue {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.pill-returned {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.pill-type {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+/* Books out count on the member list */
+.count-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: .85rem;
+}
+
+.count-zero {
+    background: #e5e7eb;
+    color: #4b5563;
+}
+
+.count-some {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.count-max {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+/* Borrow form card */
+.form-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-top: 5px solid #2563eb;
+    border-radius: .75rem;
+    padding: 1.5rem;
+    max-width: 36rem;
+}
+
+    .form-card .form-label {
+        font-size: .72rem;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: #6b7280;
+        font-weight: 600;
+    }
+
+    .form-card .form-select, .form-card .form-control {
+        border-radius: .6rem;
+    }
+
+/* one soft red notice: Delete page message and the Borrow form message */
+.notice, .validation-summary-errors {
+    display: flex;
+    align-items: flex-start;
+    gap: .6rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+    border-radius: .75rem;
+    padding: .75rem 1rem;
+    margin-bottom: 1rem;
+}
+
+    .notice-icon, .validation-summary-errors::before {
+        content: "!";
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.4rem;
+        height: 1.4rem;
+        border-radius: 50%;
+        background: #dc2626;
+        color: #fff;
+        font-weight: 700;
+        font-size: .85rem;
+    }
+
+    .validation-summary-errors ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+/* messages under the form boxes */
+.field-validation-error {
+    color: #b42318;
+    font-size: .8rem;
+}
+
+.input-validation-error {
+    border-color: #b42318 !important;
+}
+
+
+/* Members table container */
+.card-table {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+}
+
+    /* Table */
+    .card-table .table {
+        margin-bottom: 0;
+        width: 100%;
+    }
+
+    /* Table headers */
+    .card-table thead th {
+        background-color: #f8f9fa;
+        color: #495057;
+        font-weight: 600;
+        font-size: 14px;
+        padding: 16px;
+        white-space: nowrap;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    /* Table rows */
+    .card-table tbody td {
+        padding: 16px;
+        vertical-align: middle;
+        font-size: 14px;
+    }
+
+    /* Action buttons */
+    .card-table .btn {
+        min-width: 65px;
+        white-space: nowrap;
+    }
+
+/* Books out count */
+.count-pill {
+    display: inline-block;
+    min-width: 35px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.count-zero {
+    background: #e9ecef;
+    color: #6c757d;
+}
+
+.count-some {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.count-max {
+    background: #fee2e2;
+    color: #dc2626;
+}

@@ -1,42 +1,107 @@
 ﻿@model List<Member>
+
 @{
     ViewData["Title"] = "Members";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h1 class="mb-0">Members</h1>
         <p class="text-muted mb-0">@Model.Count members</p>
     </div>
-    <a asp-action="Create" class="btn btn-primary">Add a member</a>
+
+    <a asp-action="Create" class="btn btn-primary">
+        + Add a member
+    </a>
 </div>
 
-<table class="table table-striped table-hover align-middle">
-    <thead class="table-dark">
-        <tr>
-            <th class="text-end" style="width:4rem">#</th>
-            <th class="text-end">Books out</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Type</th>
-            <th style="width:10rem"></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var member in Model)
-        {
-            <tr>
-                <td class="text-end">@member.MemberId</td>
-                <td>@member.FullName</td>
-                <td>@(member.Email ?? "—")</td>
-                <td><span class="badge text-bg-secondary">@member.MemberType</span></td>
-                <td class="text-end">
-                    <a asp-action="Edit" asp-route-id="@member.MemberId" class="btn btn-sm btn-outline-secondary">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@member.MemberId" class="btn btn-sm btn-outline-danger">Delete</a>
-                    <a asp-action="Details" asp-route-id="@member.MemberId" class="btn btn-sm btn-outline-primary">Loans</a>
-                </td>
-                <td class="text-end">@member.OpenLoans</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="card-table">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+
+            <thead>
+                <tr>
+                    <th style="width: 5rem;">#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Type</th>
+                    <th class="text-center" style="width: 9rem;">
+                        Books out
+                    </th>
+                    <th class="text-end" style="width: 18rem;">
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var member in Model)
+                    {
+                        <tr>
+                            <td>@member.MemberId</td>
+
+                            <td class="fw-semibold">
+                                @member.FullName
+                            </td>
+
+                            <td>
+                                @(member.Email ?? "—")
+                            </td>
+
+                            <td>
+                                <span class="badge text-bg-secondary">
+                                    @member.MemberType
+                                </span>
+                            </td>
+
+                            <td class="text-center">
+                                <span class="count-pill @(member.OpenLoans == 0
+                                      ? "count-zero"
+                                      : member.OpenLoans >= 3
+                                        ? "count-max"
+                                        : "count-some")">
+                                    @member.OpenLoans
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="d-flex gap-2 justify-content-end">
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@member.MemberId"
+                                       class="btn btn-sm btn-outline-primary">
+                                        Loans
+                                    </a>
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@member.MemberId"
+                                       class="btn btn-sm btn-outline-secondary">
+                                        Edit
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@member.MemberId"
+                                       class="btn btn-sm btn-outline-danger">
+                                        Delete
+                                    </a>
+
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            No members found.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>

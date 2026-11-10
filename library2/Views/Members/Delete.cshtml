@@ -9,6 +9,10 @@
 {
     <div class="alert alert-danger">@ViewBag.Error</div>
 }
+@if (ViewBag.Error != null)
+{
+    <div class="notice"><span class="notice-icon">!</span><div>@ViewBag.Error</div></div>
+}
 
 <div class="card card-body" style="max-width:36rem">
 

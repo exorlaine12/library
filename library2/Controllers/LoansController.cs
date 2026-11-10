@@ -4,70 +4,109 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace library2.Controllers;
-
-// Answers every address that starts with /Loans.
 public class LoansController : Controller
 {
     private readonly LoanRepository _loans;
     private readonly MemberRepository _members;
     private readonly BookRepository _books;
 
-    public LoansController(LoanRepository loans, MemberRepository members, BookRepository books)
+    public LoansController(
+        LoanRepository loans,
+        MemberRepository members,
+        BookRepository books)
     {
         _loans = loans;
         _members = members;
         _books = books;
     }
 
-    // GET /Loans : every loan, newest first.
+    // GET /Loans
+    // Displays every loan, newest first.
     public async Task<IActionResult> Index()
     {
         var loans = await _loans.GetAllAsync();
+
         return View(loans);
     }
-    // Fills the Borrow form's two dropdowns from the database.
+
+    // Fills the Borrow form dropdowns.
     private async Task FillDropdownsAsync()
     {
-        ViewBag.Members = new SelectList(await _members.GetAllAsync(), "MemberId", "FullName");
-        ViewBag.Books = new SelectList(await _books.GetAllAsync(), "BookId", "Title");
+        ViewBag.Members = new SelectList(
+            await _members.GetAllAsync(),
+            "MemberId",
+            "FullName");
+
+        ViewBag.Books = new SelectList(
+            await _books.GetAllAsync(),
+            "BookId",
+            "Title");
     }
 
-    // GET /Loans/Borrow : the empty Borrow form.
+    // GET /Loans/Borrow
+    // Displays the empty Borrow form.
     public async Task<IActionResult> Borrow()
     {
         await FillDropdownsAsync();
+
         return View(new BorrowForm());
     }
 
-    // POST /Loans/Borrow : the form was submitted.
+    // POST /Loans/Borrow
+    // Saves a new loan if validation succeeds.
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Borrow(BorrowForm form)
     {
         if (ModelState.IsValid)
         {
-            // 2. Try to borrow the book, and keep the answer.
-            bool saved = await _loans.BorrowAsync(form.MemberId!.Value, form.BookId!.Value, form.DaysAllowed);
+            // Check whether the member can borrow another book.
+            bool saved = await _loans.BorrowAsync(
+                form.MemberId!.Value,
+                form.BookId!.Value,
+                form.DaysAllowed);
+
             if (saved)
             {
-                // 4. Go back to the list of loans.
+                TempData["Success"] = "Book successfully borrowed.";
+
                 return RedirectToAction(nameof(Index));
             }
-            // 5. Explain why nothing was saved.
-            ModelState.AddModelError("", $"This member already has {LoanRepository.MaxOpenLoans} books out. Nothing was saved.");
+
+            ModelState.AddModelError(
+                "",
+                $"This member already has {LoanRepository.MaxOpenLoans} books out. Nothing was saved.");
         }
 
-        // 6. Fill both dropdowns again.
+        // Reload dropdowns if validation fails.
         await FillDropdownsAsync();
-        // 7. Show the form again, with what was chosen.
+
         return View(form);
     }
-    // POST /Loans/Return/5 : the Return button was pressed.
+
+    // POST /Loans/Return/5
+    // Returns a borrowed book.
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Return(long id)
     {
+        // Verify that the loan exists.
+        var loans = await _loans.GetAllAsync();
+
+        var loanExists = loans.Any(l => l.LoanId == id);
+
+        if (!loanExists)
+        {
+            TempData["Error"] = "Loan record not found.";
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Return the book.
         await _loans.ReturnAsync(id);
+
+        TempData["Success"] = "Book successfully returned.";
+
         return RedirectToAction(nameof(Index));
     }
 }
