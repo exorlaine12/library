@@ -25,6 +25,7 @@ NpgsqlDataSource dataSource =
 builder.Services.AddScoped<BookRepository>();
 builder.Services.AddScoped<MemberRepository>();
 builder.Services.AddScoped<NoteRepository>();
+builder.Services.AddScoped<LoanRepository>();
 
 // Register the shared data source.
 builder.Services.AddSingleton(dataSource);
