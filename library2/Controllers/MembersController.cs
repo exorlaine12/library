@@ -1,4 +1,5 @@
-﻿using library2.Data;
+﻿using Npgsql;
+using library2.Data;
 using library2.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +20,7 @@ public class MembersController : Controller
         var members = await _members.GetAllAsync();
         return View(members);
     }
+
     // GET /Members/Create : an empty form.
     public IActionResult Create()
     {
@@ -38,6 +40,7 @@ public class MembersController : Controller
         await _members.AddAsync(member);
         return RedirectToAction(nameof(Index));
     }
+
     // GET /Members/Edit/5 : the form, filled with member 5.
     public async Task<IActionResult> Edit(long id)
     {
@@ -62,6 +65,7 @@ public class MembersController : Controller
         await _members.UpdateAsync(member);
         return RedirectToAction(nameof(Index));
     }
+
     // GET /Members/Delete/5 : ask "are you sure?"
     public async Task<IActionResult> Delete(long id)
     {
@@ -78,7 +82,27 @@ public class MembersController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(long id)
     {
-        await _members.DeleteAsync(id);
+        try
+        {
+            // 1. Delete the member.
+            await _members.DeleteAsync(id);
+        }
+        catch (PostgresException ex) when (ex.SqlState == PostgresErrorCodes.ForeignKeyViolation)
+        {
+            // 3. Load the member again, to show them on the page.
+            var member = await _members.GetByIdAsync(id);
+            if (member == null)
+            {
+                // 5. Answer "not found".
+                return NotFound();
+            }
+            // 6. Set the message the page will show.
+            ViewBag.Error = "This member has loans on record, so the database will not delete them.";
+            // 7. Show the Delete page again, with the member.
+            return View("Delete", member);
+        }
+
+        // 8. The member was deleted: go back to the list.
         return RedirectToAction(nameof(Index));
     }
 }
